@@ -1,0 +1,39 @@
+/* Whole index page */
+
+.index-page {
+    min-height: 100vh;
+}
+
+
+/* Login and Register buttons */
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    min-height: 100vh;
+}
+
+
+/* Login / Register button */
+
+.auth-button {
+    background-color:goldenrod;
+    color: white;
+    padding: 12px 25px;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 18px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+
+/* Button hover */
+
+.auth-button:hover {
+    background-color:darkgoldenrod;
+    transform: scale(1.05);
+    cursor: pointer;
+}

@@ -1,0 +1,263 @@
+* {
+    box-sizing: border-box;
+}
+
+.todo-navbar {
+    width: 100%;
+    height: 82px;
+
+    display: flex;
+    align-items: center;
+
+    padding: 0 40px;
+
+    background: #17263a;
+
+    color: white;
+}
+
+
+/* =========================
+   Todo Logo
+========================= */
+
+.todo-logo {
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    color: white;
+    text-decoration: none;
+
+    font-size: 21px;
+    font-weight: 600;
+
+    white-space: nowrap;
+}
+
+.todo-logo-icon {
+    width: 32px;
+    height: 32px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #2563d9;
+
+    border-radius: 5px;
+
+    font-size: 19px;
+    font-weight: bold;
+}
+
+
+/* =========================
+   Navigation
+========================= */
+
+.todo-nav-links {
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+
+    margin-left: 120px;
+}
+
+.todo-nav-link {
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+
+    padding: 0 30px;
+
+    color: white;
+    text-decoration: none;
+
+    font-size: 16px;
+    font-weight: 500;
+
+    transition: 0.2s ease;
+}
+
+.todo-nav-link:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+
+/* Active navigation */
+
+.todo-nav-link.active {
+    background: #2464c5;
+
+    border-radius: 0 0 5px 5px;
+}
+
+
+/* Navigation icons */
+
+.nav-icon {
+    font-size: 22px;
+    line-height: 1;
+}
+
+
+/* =========================
+   Right Side
+========================= */
+
+.todo-navbar-right {
+    margin-left: auto;
+
+    display: flex;
+    align-items: center;
+
+    gap: 35px;
+}
+
+
+/* Welcome User */
+
+.welcome-user {
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+
+    font-size: 16px;
+    font-weight: 500;
+
+    white-space: nowrap;
+}
+
+.user-icon {
+    width: 25px;
+    height: 25px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 20px;
+}
+
+
+/* =========================
+   Logout Button
+========================= */
+
+.logout-button {
+    height: 44px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    padding: 0 18px;
+
+    border: 1px solid rgba(255, 255, 255, 0.35);
+
+    border-radius: 8px;
+
+    background: transparent;
+
+    color: white;
+
+    font-size: 16px;
+    font-weight: 500;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+.logout-button:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+
+/* =========================
+   Responsive
+========================= */
+
+@media (max-width: 900px) {
+
+    .todo-navbar {
+        padding: 0 20px;
+    }
+
+    .todo-nav-links {
+        margin-left: 40px;
+    }
+
+    .todo-nav-link {
+        padding: 0 20px;
+    }
+
+    .todo-navbar-right {
+        gap: 20px;
+    }
+
+    .welcome-user {
+        display: none;
+    }
+}
+
+
+@media (max-width: 600px) {
+
+    .todo-navbar {
+        height: auto;
+        min-height: 70px;
+
+        flex-wrap: wrap;
+
+        padding: 10px 15px;
+    }
+
+    .todo-logo {
+        font-size: 19px;
+    }
+
+    .todo-logo-icon {
+        width: 30px;
+        height: 30px;
+    }
+
+    .todo-nav-links {
+        order: 3;
+
+        width: 100%;
+        height: 55px;
+
+        margin-left: 0;
+
+        justify-content: center;
+    }
+
+    .todo-nav-link {
+        height: 55px;
+
+        padding: 0 18px;
+
+        font-size: 15px;
+    }
+
+    .todo-navbar-right {
+        margin-left: auto;
+    }
+
+    .logout-button {
+        height: 40px;
+
+        padding: 0 13px;
+
+        font-size: 14px;
+    }
+}
