@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -11,133 +12,136 @@ function Home() {
     const [todos, setTodos] = useState([]);
     const [editingTodo, setEditingTodo] = useState(null);
 
-    // Load user and todos
-    useEffect(() => {
-        const currentUser = localStorage.getItem("currentUser");
+    // Get the logged-in username
+    const currentUser = localStorage.getItem("currentUser");
 
-        // If user is not logged in, go to login page
+    // Create a separate storage key for each user
+    const todosKey = currentUser
+        ? `todos_${currentUser}`
+        : null;
+
+    // Load the current user's todos
+    useEffect(() => {
         if (!currentUser) {
             navigate("/", { replace: true });
             return;
         }
 
-        // Load todos from localStorage
-        const savedTodos = localStorage.getItem("todos");
+        const savedTodos = localStorage.getItem(todosKey);
 
         if (savedTodos) {
             setTodos(JSON.parse(savedTodos));
+        } else {
+            setTodos([]);
         }
-    }, [navigate]);
 
-    // Add new todo
+        setEditingTodo(null);
+    }, [currentUser, todosKey, navigate]);
+
+    // Add a new todo
     const addTodo = (todo) => {
-        const updatedTodos = [...todos, todo];
+        setTodos((currentTodos) => {
+            const updatedTodos = [...currentTodos, todo];
 
-        setTodos(updatedTodos);
+            localStorage.setItem(
+                todosKey,
+                JSON.stringify(updatedTodos)
+            );
 
-        localStorage.setItem(
-            "todos",
-            JSON.stringify(updatedTodos)
-        );
+            return updatedTodos;
+        });
     };
 
-    // Complete todo
+    // Complete a todo
     const completeTodo = (id) => {
-        const updatedTodos = todos.map((todo) =>
-            todo.id === id
-                ? { ...todo, completed: true }
-                : todo
-        );
+        setTodos((currentTodos) => {
+            const updatedTodos = currentTodos.map((todo) =>
+                todo.id === id
+                    ? { ...todo, completed: true }
+                    : todo
+            );
 
-        setTodos(updatedTodos);
+            localStorage.setItem(
+                todosKey,
+                JSON.stringify(updatedTodos)
+            );
 
-        localStorage.setItem(
-            "todos",
-            JSON.stringify(updatedTodos)
-        );
+            return updatedTodos;
+        });
     };
 
-    // Delete todo
+    // Delete a todo
     const deleteTodo = (id) => {
-        const updatedTodos = todos.filter(
-            (todo) => todo.id !== id
-        );
+        setTodos((currentTodos) => {
+            const updatedTodos = currentTodos.filter(
+                (todo) => todo.id !== id
+            );
 
-        setTodos(updatedTodos);
+            localStorage.setItem(
+                todosKey,
+                JSON.stringify(updatedTodos)
+            );
 
-        localStorage.setItem(
-            "todos",
-            JSON.stringify(updatedTodos)
-        );
+            return updatedTodos;
+        });
+
+        if (editingTodo?.id === id) {
+            setEditingTodo(null);
+        }
     };
 
-    // Start editing a todo
+    // Select a todo for editing
     const editTodo = (todo) => {
         setEditingTodo(todo);
     };
 
-    // Update existing todo
+    // Update the existing todo without creating a new one
     const updateTodo = (updatedTodo) => {
-        const updatedTodos = todos.map((todo) =>
-            todo.id === updatedTodo.id
-                ? updatedTodo
-                : todo
-        );
+        setTodos((currentTodos) => {
+            const updatedTodos = currentTodos.map((todo) =>
+                todo.id === updatedTodo.id
+                    ? updatedTodo
+                    : todo
+            );
 
-        setTodos(updatedTodos);
+            localStorage.setItem(
+                todosKey,
+                JSON.stringify(updatedTodos)
+            );
 
-        localStorage.setItem(
-            "todos",
-            JSON.stringify(updatedTodos)
-        );
+            return updatedTodos;
+        });
 
-        // Exit edit mode
         setEditingTodo(null);
     };
-
-    // Count completed todos
-    const completedCount = todos.filter(
-        (todo) => todo.completed
-    ).length;
 
     return (
         <div>
             <Navbar />
 
             <div className="container-fluid px-4 pt-2">
-
                 <div className="row align-items-start">
 
-                    {/* Left side - Form */}
+                    {/* Left side: Add or Edit task */}
                     <div className="col-md-5">
-
                         <TodoForm
                             onAddTodo={addTodo}
                             editingTodo={editingTodo}
                             onUpdateTodo={updateTodo}
                         />
-
                     </div>
 
-                    {/* Right side - Todo List */}
+                    {/* Right side: Pending tasks */}
                     <div className="col-md-7 pt-4">
-
                         <TodoList
                             todos={todos}
                             onComplete={completeTodo}
                             onEdit={editTodo}
                             onDelete={deleteTodo}
                         />
-
-                        {/* Completed Tasks */}
-                        <div className="mt-3">
-
-                        </div>
-
                     </div>
 
                 </div>
-
             </div>
         </div>
     );

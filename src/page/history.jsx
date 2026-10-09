@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../component/navbar";
@@ -7,30 +8,34 @@ function History() {
 
     const [completedTodos, setCompletedTodos] = useState([]);
 
-    useEffect(() => {
-        const currentUser = localStorage.getItem("currentUser");
+    const currentUser = localStorage.getItem("currentUser");
+    const todosKey = currentUser
+        ? `todos_${currentUser}`
+        : null;
 
+    // Load the logged-in user's completed tasks
+    useEffect(() => {
         if (!currentUser) {
             navigate("/", { replace: true });
             return;
         }
 
-        const savedTodos = localStorage.getItem("todos");
+        const savedTodos = localStorage.getItem(todosKey);
 
         if (savedTodos) {
             const todos = JSON.parse(savedTodos);
 
-            const completed = todos.filter(
-                (todo) => todo.completed
+            setCompletedTodos(
+                todos.filter((todo) => todo.completed)
             );
-
-            setCompletedTodos(completed);
+        } else {
+            setCompletedTodos([]);
         }
-    }, [navigate]);
+    }, [currentUser, todosKey, navigate]);
 
-    // Remove task from History
+    // Remove a completed task from storage and history
     const removeFromHistory = (id) => {
-        const savedTodos = localStorage.getItem("todos");
+        const savedTodos = localStorage.getItem(todosKey);
 
         if (!savedTodos) {
             return;
@@ -42,18 +47,14 @@ function History() {
             (todo) => todo.id !== id
         );
 
-        // Save updated todos
         localStorage.setItem(
-            "todos",
+            todosKey,
             JSON.stringify(updatedTodos)
         );
 
-        // Update History screen
-        const completed = updatedTodos.filter(
-            (todo) => todo.completed
+        setCompletedTodos(
+            updatedTodos.filter((todo) => todo.completed)
         );
-
-        setCompletedTodos(completed);
     };
 
     return (
@@ -61,7 +62,7 @@ function History() {
             <Navbar />
 
             <div className="container-fluid p-4">
-
+                {/* History heading */}
                 <h5 className="fw-bold mb-3">
                     ✓ History (Completed Tasks)
 
@@ -70,6 +71,7 @@ function History() {
                     </span>
                 </h5>
 
+                {/* Completed tasks */}
                 {completedTodos.length === 0 ? (
                     <p className="text-muted">
                         No completed tasks yet.
@@ -78,49 +80,42 @@ function History() {
                     completedTodos.map((todo) => (
                         <div
                             key={todo.id}
-                            className="card mb-2 border-0 shadow-sm"
+                            className="card mb-3 border-0 shadow-sm"
                         >
-                            <div className="card-body">
+                            <div className="card-body d-flex justify-content-between align-items-center">
+                                {/* Task details on the left */}
+                                <div className="flex-grow-1">
+                                    <h6 className="fw-bold mb-2">
+                                        ✓ {todo.title}
+                                    </h6>
 
-                                <div className="d-flex justify-content-between align-items-start">
+                                    <p className="text-muted small mb-2">
+                                        {todo.description}
+                                    </p>
 
-                                    {/* Task information */}
-                                    <div>
-                                        <h6 className="fw-bold">
-                                            ✓ {todo.title}
-                                        </h6>
+                                    <div className="small text-muted">
+                                        📅 {todo.date || "No date"}
 
-                                        <p className="text-muted small mb-2">
-                                            {todo.description}
-                                        </p>
-
-                                        <div className="small text-muted">
-                                            📅 {todo.date || "No date"}
-
-                                            <span className="ms-3">
-                                                🕐 {todo.time || "No time"}
-                                            </span>
-                                        </div>
+                                        <span className="ms-3">
+                                            🕐 {todo.time || "No time"}
+                                        </span>
                                     </div>
-
-                                    {/* Remove button */}
-                                    <button
-                                        type="button"
-                                        className="btn btn-danger btn-sm"
-                                        onClick={() =>
-                                            removeFromHistory(todo.id)
-                                        }
-                                    >
-                                        🗑 Remove
-                                    </button>
-
                                 </div>
 
+                                {/* Remove button on the right */}
+                                <button
+                                    type="button"
+                                    className="btn btn-sm btn-danger ms-3 flex-shrink-0"
+                                    onClick={() =>
+                                        removeFromHistory(todo.id)
+                                    }
+                                >
+                                    Remove
+                                </button>
                             </div>
                         </div>
                     ))
                 )}
-
             </div>
         </div>
     );
